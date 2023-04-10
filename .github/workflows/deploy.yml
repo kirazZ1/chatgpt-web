@@ -3,7 +3,7 @@ name: github pages
 on:
   push:
     branches:
-      - master # push 到 main 分支时触发 jobs
+      - main # push 到 main 分支时触发 jobs
 jobs:
   deploy:
     runs-on: ubuntu-latest
