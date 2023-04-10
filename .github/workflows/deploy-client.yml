@@ -1,4 +1,4 @@
-name: github pages
+name: deploy-client
 
 on:
   push:
