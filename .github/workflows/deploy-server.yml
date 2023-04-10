@@ -30,4 +30,4 @@ jobs:
             docker rm -f chatgpt-web-backend
             docker image rm registry.cn-hangzhou.aliyuncs.com/kira-namespace-01/chatgpt-web-backend
             docker pull registry.cn-hangzhou.aliyuncs.com/kira-namespace-01/chatgpt-web-backend
-            docker run -d --name chatgpt-web-backend -p 8089:80 registry.cn-hangzhou.aliyuncs.com/kira-namespace-01/chatgpt-web-backend:latest
+            docker run -d --name chatgpt-web-backend -p 3002:3002 registry.cn-hangzhou.aliyuncs.com/kira-namespace-01/chatgpt-web-backend:latest
