@@ -39,7 +39,7 @@ const routes: RouteRecordRaw[] = [
 ]
 
 export const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHashHistory(import.meta.env.VITE_APP_BASE_URL),
   routes,
   scrollBehavior: () => ({ left: 0, top: 0 }),
 })
