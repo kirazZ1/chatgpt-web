@@ -1,0 +1,36 @@
+name: github pages
+
+on:
+  push:
+    branches:
+      - master # push 到 main 分支时触发 jobs
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
+        with:
+          persist-credentials: false
+          # checkout到你的hexo代码分支
+          ref: master
+          # hexo需要加载内部子模块
+          submodules: true
+      - name: Build docker image
+        run: |
+          docker build -t chatgpt-web-frontend:latest .
+          docker login --username=${{ secrets.DOCKER_USERNAME }} registry.cn-hangzhou.aliyuncs.com --password=${{ secrets.DOCKER_PASSWORD }}
+          docker tag chatgpt-web-frontend registry.cn-hangzhou.aliyuncs.com/kira-namespace-01/chatgpt-web-frontend:latest
+          docker push registry.cn-hangzhou.aliyuncs.com/kira-namespace-01/chatgpt-web-frontend:latest
+      # 将静态页面部署至 ECS
+      - name: Deploy image
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }} # ECS 域名 或 IP 地址
+          username: ${{ secrets.SSH_USERNAME }} # 登录用户名
+          password: ${{ secrets.SSH_PASSWORD }} # 登录密码
+          script: |
+            docker rm -f chatgpt-web-frontend
+            docker image rm registry.cn-hangzhou.aliyuncs.com/kira-namespace-01/chatgpt-web-frontend
+            docker pull registry.cn-hangzhou.aliyuncs.com/kira-namespace-01/chatgpt-web-frontend
+            docker run -d --name chatgpt-web-frontend -p 8089:80 registry.cn-hangzhou.aliyuncs.com/kira-namespace-01/chatgpt-web-frontend:latest
