@@ -12,9 +12,7 @@ jobs:
         uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
         with:
           persist-credentials: false
-          # checkout到你的hexo代码分支
-          ref: master
-          # hexo需要加载内部子模块
+          ref: main
           submodules: true
       - name: Build docker image
         run: |
@@ -22,7 +20,6 @@ jobs:
           docker login --username=${{ secrets.DOCKER_USERNAME }} registry.cn-hangzhou.aliyuncs.com --password=${{ secrets.DOCKER_PASSWORD }}
           docker tag chatgpt-web-frontend registry.cn-hangzhou.aliyuncs.com/kira-namespace-01/chatgpt-web-frontend:latest
           docker push registry.cn-hangzhou.aliyuncs.com/kira-namespace-01/chatgpt-web-frontend:latest
-      # 将静态页面部署至 ECS
       - name: Deploy image
         uses: appleboy/ssh-action@master
         with:
